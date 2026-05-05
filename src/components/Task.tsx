@@ -9,23 +9,21 @@ interface TaskProps {
     state: 'PLANNED' | 'ONGOING' | 'DONE';
 }
 
-const Task = ({id, title, state}:TaskProps) => {
+const Task = ({id, title, state}: TaskProps) => {
     const deleteTask = useTasks(store => store.deleteTask);
     const setDraggedTask = useTasks(store => store.setDraggedTask);
 
     return (
-        <div className="task"
-             draggable
-             onDragStart={() => setDraggedTask({id, title, state})}
+        <div
+            className="task"
+            draggable
+            onDragStart={() => setDraggedTask({id, title, state})}
         >
-            <div>{title}</div>
+            <div className="task-title">{title}</div>
             <div className="bottomWrapper">
-                <div>
-                    <img
-                        src={trash}
-                        onClick={() => {deleteTask(id)}}
-                    />
-                </div>
+                <button className="deleteBtn" onClick={() => deleteTask(id)} title="Delete">
+                    <img src={trash} alt="delete"/>
+                </button>
                 <div className={classNames("status", state)}>{state}</div>
             </div>
         </div>
