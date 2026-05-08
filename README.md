@@ -26,7 +26,7 @@ useTasks
   └── moveTask(id, newState)
 ```
 
-Single store, no middleware, no persistence — kept it simple to focus on the basics.
+Uses `devtools` (Redux DevTools support) and `persist` (saves tasks to localStorage) middleware.
 
 ---
 
@@ -35,6 +35,7 @@ Single store, no middleware, no persistence — kept it simple to focus on the b
 - React 19 + TypeScript
 - Vite
 - Zustand 5
+- Vitest + Testing Library
 - classnames
 - HTML5 Drag & Drop API
 
@@ -46,3 +47,13 @@ Single store, no middleware, no persistence — kept it simple to focus on the b
 npm install
 npm run dev
 ```
+
+---
+
+## Tests
+
+```bash
+npm run test
+```
+
+Unit tests for the Zustand store — covers `addTask`, `deleteTask`, `moveTask`, `setDraggedTask`.
