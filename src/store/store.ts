@@ -1,31 +1,48 @@
-import {create} from "zustand/react";
+import { create } from "zustand/react";
+import { devtools, persist } from "zustand/middleware";
 
 type Task = {
-    id: string;
-    title: string;
-    state: "PLANNED" | "ONGOING" | "DONE";
+  id: string;
+  title: string;
+  state: "PLANNED" | "ONGOING" | "DONE";
+};
+
+interface TaskStore {
+  tasks: Task[];
+  addTask: (title: string, state: Task["state"]) => void;
+  deleteTask: (id: string) => void;
+  draggedTask: Task | null;
+  setDraggedTask: (task: Task | null) => void;
+  moveTask: (id: string, state: Task["state"]) => void;
 }
 
-interface StateProps {
-    tasks: Task[];
-    addTask: (title: string, state: Task["state"]) => void;
-    deleteTask: (id: string) => void;
-    draggedTask: Task | null;
-    setDraggedTask: (task: Task | null) => void;
-    moveTask: (id: string, state: Task["state"]) => void;
-}
-
-export const useTasks = create<StateProps>()((set) => ({
-    tasks: [{id: crypto.randomUUID(), title: "testTask", state: "PLANNED"}],
-    draggedTask: null,
-    addTask: (title, taskState) =>
-        set((store) =>
-            ({tasks: [...store.tasks, {id: crypto.randomUUID(), title, state: taskState}]})),
-    deleteTask: (id) =>
-        set((store) =>
-            ({tasks: store.tasks.filter((task) => task.id !== id)})),
-    setDraggedTask: (task) => set({draggedTask: task}),
-    moveTask: (id, newState) =>
-        set(store => ({tasks: store.tasks.map(t =>
-                t.id === id ? {...t, state: newState} : t)})),
-}))
+export const useTasks = create<TaskStore>()(
+  devtools(
+    persist(
+      (set) => ({
+        tasks: [],
+        draggedTask: null,
+        addTask: (title, taskState) =>
+          set((store) => ({
+            tasks: [
+              ...store.tasks,
+              { id: crypto.randomUUID(), title, state: taskState },
+            ],
+          }), false, "addTask"),
+        deleteTask: (id) =>
+          set((store) => ({ tasks: store.tasks.filter((task) => task.id !== id) }), false, "deleteTask"),
+        setDraggedTask: (task) => set({ draggedTask: task }, false, "draggedTask"),
+        moveTask: (id, newState) =>
+          set((store) => ({
+            tasks: store.tasks.map((t) =>
+              t.id === id ? { ...t, state: newState } : t,
+            ),
+          }), false, "moveTask"),
+      }),
+      {
+        name: "task-storage",
+        partialize: (state) => ({ tasks: state.tasks }),
+      }
+    )
+  )
+);
