@@ -1,5 +1,5 @@
+import { Column } from "@/features/task_manager";
 import "./App.css";
-import Column from "./components/Column.tsx";
 
 export const App = () => {
   return (

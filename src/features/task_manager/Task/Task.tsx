@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import "./Task.css";
-import trash from "../assets/trash-2.svg";
-import { useTasks } from "../store/store.ts";
+import trash from "@/shared/assets/trash-2.svg";
+import { useTasks } from "@/store/store";
 
 interface TaskProps {
   id: string;

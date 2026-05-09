@@ -1,10 +1,11 @@
 import { create } from "zustand/react";
 import { devtools, persist } from "zustand/middleware";
+import type { TaskState } from "./types";
 
 type Task = {
   id: string;
   title: string;
-  state: "PLANNED" | "ONGOING" | "DONE";
+  state: TaskState;
 };
 
 interface TaskStore {
