@@ -1,0 +1,89 @@
+.column {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+
+  &.drop {
+    border-color: var(--accent);
+    background: var(--surface-2);
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+
+  p {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.addBtn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+}
+
+.clearBtn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 0.15s ease, background 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 80, 80, 0.1);
+    opacity: 1;
+
+    img {
+      filter: invert(40%) sepia(80%) saturate(500%) hue-rotate(310deg);
+    }
+  }
+
+  img {
+    height: 0.8rem;
+    filter: invert(0.5);
+    transition: filter 0.15s ease;
+  }
+}

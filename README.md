@@ -8,9 +8,11 @@ Built this as a hands-on way to learn Zustand. The app is a Kanban board with dr
 
 Three columns: **PLANNED → ONGOING → DONE**
 
-- Add tasks per column via a modal
+- Add tasks with title and description via a modal
+- Edit tasks inline via modal
 - Drag tasks between columns using HTML5 DnD
 - Delete tasks inline
+- Clear all tasks in a column
 
 ---
 
@@ -18,10 +20,11 @@ Three columns: **PLANNED → ONGOING → DONE**
 
 ```ts
 useTasks
-  ├── tasks[]              // all tasks with id, title, state
-  ├── draggedTask          // currently dragged task (for DnD tracking)
-  ├── addTask(title, state)
+  ├── tasks[]                        // all tasks with id, title, state, description
+  ├── draggedTask                    // currently dragged task (for DnD tracking)
+  ├── addTask(title, state, description?)
   ├── deleteTask(id)
+  ├── editTask(id, title, description?)
   ├── setDraggedTask(task)
   └── moveTask(id, newState)
 ```
@@ -36,6 +39,7 @@ Uses `devtools` (Redux DevTools support) and `persist` (saves tasks to localStor
 - Vite
 - Zustand 5
 - Vitest + Testing Library
+- SCSS Modules
 - classnames
 - HTML5 Drag & Drop API
 

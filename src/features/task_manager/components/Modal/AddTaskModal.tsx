@@ -1,46 +1,72 @@
-import { useTasks } from "@/store/store";
-import type { TaskState } from "@/store/types";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import styles from "./AddTaskModal.module.scss";
+import { useTasks } from "../../store/store";
 import { ACCENT } from "@/shared/constants";
+import { createPortal } from "react-dom";
+import type { AddTaskModalProps } from "./types";
 
-interface AddTaskModalProps {
-  state: TaskState;
-  onClose: () => void;
-}
+export default function AddTaskModal({
+  state,
+  onClose,
+  isOpen,
+  taskId,
+  initialTitle = "",
+  initialDescription = "",
+}: AddTaskModalProps) {
+  const [text, setText] = useState<string>(initialTitle);
+  const [description, setDescription] = useState<string>(initialDescription);
+  const { addTask, editTask } = useTasks();
 
-export default function AddTaskModal({ state, onClose }: AddTaskModalProps) {
-  const [text, setText] = useState<string>("");
-  const { addTask } = useTasks();
+  const isEdit = !!taskId;
 
-  const handleAddTask = () => {
-    if (text.trim()) {
-      addTask(text.trim(), state);
-      onClose();
-      setText("");
+  const handleSubmit = () => {
+    if (!text.trim()) return;
+    if (isEdit) {
+      editTask(taskId, text.trim(), description.trim());
+    } else {
+      addTask(text.trim(), state, description.trim());
     }
+    onClose();
   };
 
-  return (
-    <div className="Modal" onClick={() => onClose()}>
-      <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+
+  return createPortal(
+    <div className={styles.modal} onClick={onClose} onMouseDown={(e) => e.stopPropagation()}>
+
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <input
           autoFocus
           placeholder="Task title..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && text.trim()) {
-              handleAddTask();
-            }
+            if (e.key === "Enter") handleSubmit();
           }}
+        />
+        <textarea
+          className={styles.textarea}
+          placeholder="Task description..."
+          value={description}
+          rows={3}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <button
           style={{ "--accent": ACCENT[state] } as React.CSSProperties}
-          onClick={handleAddTask}
+          onClick={handleSubmit}
         >
-          Add task
+          {isEdit ? "Save" : "Add task"}
         </button>
       </div>
-    </div>
+    </div>, 
+    document.body
   );
 }

@@ -45,7 +45,7 @@ describe("TaskStore", () => {
     });
     expect(result.current.tasks[0].state).toBe("ONGOING");
   });
-  
+
   test("setDraggedTask", () => {
     const { result } = renderHook(() => useTasks((state) => state));
     act(() => {

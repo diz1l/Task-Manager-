@@ -1,4 +1,4 @@
-import type { TaskState } from "@/store/types";
+import type { TaskState } from "@/features/task_manager/store/types";
 
 export const ACCENT: Record<TaskState, string> = {
   PLANNED: "var(--planned)",

@@ -1,5 +1,6 @@
 import { Column } from "@/features/task_manager";
 import "./App.css";
+import { COLUMN_ORDER } from "@/shared/constants";
 
 export const App = () => {
   return (
@@ -9,9 +10,9 @@ export const App = () => {
         <span>drag to move between columns</span>
       </header>
       <div className="App-board">
-        <Column state="PLANNED" />
-        <Column state="ONGOING" />
-        <Column state="DONE" />
+        {COLUMN_ORDER.map((state) => (
+          <Column key={state} state={state} />
+        ))}
       </div>
     </div>
   );

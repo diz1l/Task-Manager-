@@ -1,26 +1,24 @@
-import "./styles.css";
 import { useState } from "react";
 import classNames from "classnames";
-import { useTasks } from "@/store/store.ts";
-import type ColumnProps from "@/store/types.ts";
+import styles from "./Column.module.scss";
+import { useTasks } from "./store/store";
+import type { ColumnProps } from "./types";
 import { ACCENT } from "@/shared/constants";
-import Task from "@/features/task_manager/Task/Task";
-import AddTaskModal from "@/features/task_manager/components/Modal/AddTaskModal";
+import Task from "./Task/Task";
+import AddTaskModal from "./components/Modal/AddTaskModal";
+import trash from "@/shared/assets/trash-2.svg";
 
-export default function Column({ state }: ColumnProps) {
-  const { tasks, setDraggedTask, draggedTask, moveTask } = useTasks();
-  // throw new Error("test error");
-
+export default function Column({ id, state }: ColumnProps) {
+  const { tasks, setDraggedTask, draggedTask, moveTask, deleteAllTasksInColumn } = useTasks();
 
   const [open, setOpen] = useState<boolean>(false);
   const [drop, setDrop] = useState<boolean>(false);
 
   const count = tasks.filter((t) => t.state === state).length;
 
-
   return (
     <div
-      className={classNames("column", { drop })}
+      className={classNames(styles.column, { [styles.drop]: drop })}
       style={{ "--accent": ACCENT[state] } as React.CSSProperties}
       onDragOver={(e) => {
         setDrop(true);
@@ -35,15 +33,27 @@ export default function Column({ state }: ColumnProps) {
         setDrop(false);
       }}
     >
-      <div className="titleWrapper">
+      <div className={styles.titleWrapper}>
         <p>
           {state} {count > 0 && <span style={{ opacity: 0.5 }}>{count}</span>}
         </p>
-        <button onClick={() => setOpen(!open)} title="Add task">
-          +
-        </button>
+        <div className={styles.buttons}>
+          <button
+            className={styles.addBtn}
+            onClick={() => setOpen(!open)}
+            title="Add task"
+          >
+            +
+          </button>
+          <button 
+            className={styles.clearBtn} 
+            title="Delete all tasks" 
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => deleteAllTasksInColumn(state)}>
+            <img src={trash} alt="delete all tasks" />
+          </button>
+        </div>
       </div>
-
       {tasks
         .filter((t) => t.state === state)
         .map((task) => (
@@ -52,11 +62,16 @@ export default function Column({ state }: ColumnProps) {
             id={task.id}
             title={task.title}
             state={task.state}
+            description={task.description}
           />
         ))}
-
       {open && (
-        <AddTaskModal state={state} onClose={() => setOpen(false)} />
+        <AddTaskModal
+          key={id}
+          isOpen={open}
+          state={state}
+          onClose={() => setOpen(false)}
+        />
       )}
     </div>
   );
